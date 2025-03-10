@@ -1,0 +1,18 @@
+a.footnote-number {
+  text-decoration: none !important;
+  padding-left: 1px;
+  padding-right: 1px;
+  cursor: pointer;
+}
+
+a.footnote-index {
+  padding-right: 3px;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+hr.footnote-divider {
+  background-color: #dddddd;
+  height: 1px;
+  border: 0;
+}
