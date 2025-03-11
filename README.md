@@ -51,13 +51,14 @@ const quill = new Quill(editorContainer, {
 });
 ```
 
-### Insert Footnotes Using Button
+### Insert Footnotes
 
-To enable users to insert footnotes easily, create a custom toolbar button and attach the following event listener:
+You can insert footnotes by using the `addFootnote(content: string)` method provided by the `FootnoteModule`.
+To add a toolbar button for inserting footnotes, you can create a button and register a click event listener as shown below:
 
 ```javascript
-const insertFootnoteButton = document.querySelector("#ql-footnote");
-insertFootnoteButton.addEventListener("click", function () {
+const footnoteButton = document.querySelector("#ql-footnote");
+footnoteButton.addEventListener("click", function () {
   const footnoteModule = quill.getModule("footnote");
   footnoteModule.addFootnote("");
 });
@@ -70,13 +71,7 @@ Here's a complete example demonstrating how you might integrate `quill-footnote`
 **App.jsx**
 ```jsx
 import { useRef } from "react";
-import Quill from "quill";
-import { FootnoteModule } from "quill-footnote";
 import Editor from "./Editor";
-
-import "quill/dist/quill.snow.css";
-
-Quill.register("modules/footnote", FootnoteModule);
 
 function App() {
   const quillRef = useRef(null);
@@ -90,85 +85,86 @@ export default App;
 ```jsx
 import React, { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 import Quill from "quill";
-import { FootnoteModule, footnoteKeyboardBindings } from "quill-footnote";
+import { footnoteKeyboardBindings, FootnoteModule } from "quill-footnote";
+import "quill/dist/quill.snow.css";
 
-const Editor = forwardRef(({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
-  const containerRef = useRef(null);
-  const defaultValueRef = useRef(defaultValue);
-  const onTextChangeRef = useRef(onTextChange);
-  const onSelectionChangeRef = useRef(onSelectionChange);
+Quill.register("modules/footnote", FootnoteModule);
 
-  useLayoutEffect(() => {
-    onTextChangeRef.current = onTextChange;
-    onSelectionChangeRef.current = onSelectionChange;
-  });
+const Editor = forwardRef(
+    ({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
+        const containerRef = useRef(null);
+        const defaultValueRef = useRef(defaultValue);
+        const onTextChangeRef = useRef(onTextChange);
+        const onSelectionChangeRef = useRef(onSelectionChange);
 
-  useEffect(() => {
-    ref.current?.enable(!readOnly);
-  }, [ref, readOnly]);
+        useLayoutEffect(() => {
+            onTextChangeRef.current = onTextChange;
+            onSelectionChangeRef.current = onSelectionChange;
+        });
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const editorContainer = container.appendChild(
-      container.ownerDocument.createElement("div")
-    );
+        useEffect(() => {
+            ref.current?.enable(!readOnly);
+        }, [ref, readOnly]);
 
-    const quill = new Quill(editorContainer, {
-      theme: "snow",
-      modules: {
-        toolbar: {
-          container: "#toolbar",
-        },
-        footnote: true, // Enables footnote functionality
-        keyboard: {
-          bindings: {
-            ...footnoteKeyboardBindings, // Required keyboard bindings for footnotes
-          },
-        },
-      },
-    });
+        const editorHTML = `
+              <div id="toolbar">
+                <button type="button" id="ql-footnote" class="ql-footnote" style="width: auto">Insert Footnote</button>
+              </div>
+              <div id="editor-container" style="height: 400px;" />
+          `;
 
-    ref.current = quill;
+        useEffect(() => {
+            const container = containerRef.current;
+            container.innerHTML = editorHTML;
 
-    if (defaultValueRef.current) {
-      quill.setContents(defaultValueRef.current);
-    }
+            const quill = new Quill("#editor-container", {
+                modules: {
+                    toolbar: {
+                        container: "#toolbar",
+                    },
+                    footnote: true, // Enables footnote functionality
+                    keyboard: {
+                        bindings: {
+                            ...footnoteKeyboardBindings, // Ensures proper keyboard interactions with footnotes
+                        },
+                    },
+                },
+                theme: "snow",
+            });
 
-    quill.on(Quill.events.TEXT_CHANGE, (...args) => {
-      onTextChangeRef.current?.(...args);
-    });
+            ref.current = quill;
 
-    quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
-      onSelectionChangeRef.current?.(...args);
-    });
+            if (defaultValueRef.current) {
+                quill.setContents(defaultValueRef.current);
+            }
 
-    // Attach footnote insertion to custom button
-    const insertFootnoteButton = document.querySelector("#ql-footnote");
-    insertFootnoteButton.addEventListener("click", function () {
-      const footnoteModule = quill.getModule("footnote");
-      footnoteModule.addFootnote("");
-    });
+            quill.on(Quill.events.TEXT_CHANGE, (...args) => {
+                onTextChangeRef.current?.(...args);
+            });
 
-    return () => {
-      ref.current = null;
-      container.innerHTML = "";
-    };
-  }, [ref]);
+            quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
+                onSelectionChangeRef.current?.(...args);
+            });
 
-  return (
-    <>
-      <div id="toolbar">
-        <button id="ql-footnote" className="ql-footnote" style={{ width: "auto" }}>
-          Insert Footnote
-        </button>
-      </div>
-      <div ref={containerRef} />
-    </>
-  );
-});
+            const footnoteButton = document.querySelector("#ql-footnote");
+            footnoteButton.addEventListener("click", function () {
+                const module = quill.getModule("footnote");
+                module.addFootnote("");
+            });
+
+            return () => {
+                ref.current = null;
+                container.innerHTML = "";
+            };
+        }, [ref]);
+
+        return <div ref={containerRef} />
+    },
+);
 
 Editor.displayName = "Editor";
 export default Editor;
+
 ```
 
 ### CSS Styling
