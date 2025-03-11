@@ -21,14 +21,18 @@ const Editor = forwardRef(
       ref.current?.enable(!readOnly);
     }, [ref, readOnly]);
 
+    const editorHTML = `
+      <div id="toolbar">
+        <button type="button" id="ql-footnote" class="ql-footnote" style="width: auto">Insert Footnote</button>
+      </div>
+      <div id="editor-container" style="height: 400px;" />
+  `;
+
     useEffect(() => {
       const container = containerRef.current;
-      const editorContainer = container.appendChild(
-        container.ownerDocument.createElement("div"),
-      );
+      container.innerHTML = editorHTML;
 
-      const quill = new Quill(editorContainer, {
-        theme: "snow",
+      const quill = new Quill("#editor-container", {
         modules: {
           toolbar: {
             container: "#toolbar",
@@ -40,6 +44,7 @@ const Editor = forwardRef(
             },
           },
         },
+        theme: "snow",
       });
 
       ref.current = quill;
@@ -56,8 +61,8 @@ const Editor = forwardRef(
         onSelectionChangeRef.current?.(...args);
       });
 
-      const customButton = document.querySelector("#ql-footnote");
-      customButton.addEventListener("click", function () {
+      const footnoteButton = document.querySelector("#ql-footnote");
+      footnoteButton.addEventListener("click", function () {
         const module = quill.getModule("footnote");
         module.addFootnote("");
       });
@@ -69,16 +74,8 @@ const Editor = forwardRef(
     }, [ref]);
 
     return (
-      <div style={{ margin: '50px'}}>
-        <div id="toolbar">
-          <button
-            id="ql-footnote"
-            className="ql-footnote"
-            style={{ width: "auto" }}
-          >
-            Insert Footnote
-          </button>
-        </div>
+      <div style={{ margin: "auto", maxWidth: "800px", width: "80%" }}>
+        <h1>quill-footnote</h1>
         <div ref={containerRef} />
       </div>
     );
@@ -86,5 +83,4 @@ const Editor = forwardRef(
 );
 
 Editor.displayName = "Editor";
-
 export default Editor;
