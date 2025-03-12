@@ -42,15 +42,15 @@ class FootnoteModule extends Module {
     this.quill.root.addEventListener("click", (event: Event) => {
       const target = event.target as HTMLElement;
       if (target && target.classList?.contains("footnote-number")) {
-        const createdAt = target.getAttribute("data-index");
+        const index = target.getAttribute("data-index");
         const footnoteRow = document.querySelector(
-          `.footnote-row[id="footnote-row-${createdAt}"]`,
+            `.footnote-row[data-index="${index}"]`,
         );
         footnoteRow && footnoteRow.scrollIntoView();
       } else if (target && target.classList?.contains("footnote-row")) {
-        const createdAt = target.getAttribute("data-index");
+        const index = target.getAttribute("data-index");
         const footnoteNumber = document.querySelector(
-          `.footnote-number[id="footnote-${createdAt}"]`,
+            `.footnote-number[data-index="${index}"]`,
         );
         footnoteNumber && footnoteNumber.scrollIntoView();
       }
