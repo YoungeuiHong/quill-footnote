@@ -1,6 +1,6 @@
 {
   "name": "quill-footnote",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Quill editor module that enables easy insertion, editing, and management of footnotes.",
   "main": "dist/quill-footnote.cjs.js",
   "module": "dist/quill-footnote.esm.js",
