@@ -1,7 +1,9 @@
 import Embed from "quill/blots/embed";
 
 export interface FootnoteNumberValue {
-  createdAt: string;
+  id: number;
+  index: string;
+  createdAt: number;
 }
 
 export class FootnoteNumber extends Embed {
@@ -14,10 +16,10 @@ export class FootnoteNumber extends Embed {
     const footnoteId = `footnote-${value.createdAt}`;
     node.setAttribute("id", footnoteId);
     node.setAttribute("class", "footnote-number");
-    node.setAttribute("data-index", "0");
-    node.setAttribute("data-createdAt", value.createdAt);
+    node.setAttribute("data-index", value.index);
+    node.setAttribute("data-createdAt", value.createdAt.toString());
     node.setAttribute("contenteditable", "false");
-    node.textContent = `[0]`;
+    node.textContent = `[${value.index || "?"}]`;
     return node;
   }
 
@@ -32,9 +34,9 @@ export class FootnoteNumber extends Embed {
 
   static value(node: HTMLElement) {
     return {
-      id: node.getAttribute("id"),
-      index: node.getAttribute("data-index"),
-      createdAt: node.getAttribute("data-createdAt"),
+      id: parseInt(node.getAttribute("data-createdAt") || "0", 10),
+      index: node.getAttribute("data-index") || "",
+      createdAt: parseInt(node.getAttribute("data-createdAt") || "0", 10),
     };
   }
 
@@ -44,7 +46,10 @@ export class FootnoteNumber extends Embed {
       value.id &&
       value.id === (this.domNode as HTMLElement).getAttribute("id")
     ) {
-      (this.domNode as HTMLElement).setAttribute("data-index", value.index);
+      (this.domNode as HTMLElement).setAttribute(
+        "data-index",
+        value.index.toString(),
+      );
       this.domNode.textContent = `[${value.index}]`;
     }
   }
