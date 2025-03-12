@@ -32,7 +32,8 @@ Quill.register("modules/footnote", FootnoteModule);
 
 ### Include the Module in Quill Configuration
 
-When initializing your Quill editor, ensure that the `footnote` module and related keyboard bindings are included in the configuration:
+When initializing your Quill editor, ensure that the `footnote` module and related keyboard bindings are included in the configuration.  
+`footnoteKeyboardBindings` provides custom shortcuts for managing footnotes, such as deleting them using Backspace or Delete.
 
 ```javascript
 const quill = new Quill(editorContainer, {
@@ -64,6 +65,43 @@ footnoteButton.addEventListener("click", function () {
 });
 ```
 
+
+### CSS Styling
+The default styles for `quill-footnote` are included in:
+
+```javascript
+import "quill-footnote/dist/quill-footnote.css";
+```
+If needed, you can override these styles in your own CSS file after importing `"quill-footnote/dist/quill-footnote.css"`.
+
+**Default Styles (quill-footnote/dist/quill-footnote.css):**
+```css
+a.footnote-number {
+    text-decoration: none !important;
+    padding-left: 1px;
+    padding-right: 1px;
+    cursor: pointer;
+}
+
+hr.footnote-divider {
+    background-color: #dddddd;
+    height: 1px;
+    border: 0;
+}
+
+.footnote-row::before {
+    content: "[" attr(data-index) "] ";
+    pointer-events: auto;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.footnote-row {
+    pointer-events: auto;
+}
+
+```
+
 ### Complete React Example
 
 Here's a complete example demonstrating how you might integrate `quill-footnote` in a React project:
@@ -87,8 +125,9 @@ import React, { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 import Quill from "quill";
 import { footnoteKeyboardBindings, FootnoteModule } from "quill-footnote";
 import "quill/dist/quill.snow.css";
+import "quill-footnote/dist/quill-footnote.css"; // Import default footnote styles
 
-Quill.register("modules/footnote", FootnoteModule);
+Quill.register("modules/footnote", FootnoteModule); // Register the footnote module
 
 const Editor = forwardRef(
     ({ readOnly, defaultValue, onTextChange, onSelectionChange }, ref) => {
@@ -106,6 +145,7 @@ const Editor = forwardRef(
             ref.current?.enable(!readOnly);
         }, [ref, readOnly]);
 
+        // Add a footnote button to the toolbar for inserting footnotes
         const editorHTML = `
               <div id="toolbar">
                 <button type="button" id="ql-footnote" class="ql-footnote" style="width: auto">Insert Footnote</button>
@@ -146,6 +186,7 @@ const Editor = forwardRef(
                 onSelectionChangeRef.current?.(...args);
             });
 
+            // Add event listener for the footnote button
             const footnoteButton = document.querySelector("#ql-footnote");
             footnoteButton.addEventListener("click", function () {
                 const module = quill.getModule("footnote");
@@ -167,30 +208,6 @@ export default Editor;
 
 ```
 
-### CSS Styling
-
-The following CSS provides basic styling for footnotes. Feel free to customize according to your project's needs:
-
-```css
-a.footnote-number {
-  text-decoration: none !important;
-  padding-left: 1px;
-  padding-right: 1px;
-  cursor: pointer;
-}
-
-a.footnote-index {
-  padding-right: 3px;
-  cursor: pointer;
-  text-decoration: none !important;
-}
-
-hr.footnote-divider {
-  background-color: #dddddd;
-  height: 1px;
-  border: 0;
-}
-```
 
 ## License
 
