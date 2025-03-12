@@ -1,0 +1,29 @@
+a.footnote-number {
+    text-decoration: none !important;
+    padding-left: 1px;
+    padding-right: 1px;
+    cursor: pointer;
+}
+
+a.footnote-index {
+    padding-right: 3px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+hr.footnote-divider {
+    background-color: #dddddd;
+    height: 1px;
+    border: 0;
+}
+
+.footnote-row::before {
+    content: "[" attr(data-index) "] ";
+    pointer-events: auto;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.footnote-row {
+    pointer-events: auto;
+}
