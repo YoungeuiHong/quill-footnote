@@ -5,12 +5,6 @@ a.footnote-number {
   cursor: pointer;
 }
 
-a.footnote-index {
-  padding-right: 3px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
 hr.footnote-divider {
   background-color: #dddddd;
   height: 1px;
