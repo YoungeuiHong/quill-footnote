@@ -2,6 +2,12 @@
 
 Quill-Footnote is a Quill module that enables easy insertion and management of footnotes within a Quill editor. It handles automatic indexing, insertion, deletion, and navigation of footnotes.
 
+## Demo
+
+[🚀 **Demo on CodeSandbox**](https://codesandbox.io/p/github/YoungeuiHong/quill-footnote-demo/main)
+
+Quickly explore how footnotes can be inserted and managed within a Quill editor.
+
 ## Installation
 ```sh
 npm install quill-footnote
